@@ -40,27 +40,17 @@ namespace SzyfryBlokowe.Classes
 
         public BitMessage Encrypt(int loops)
         {
-            if (_appLevel == AppLevel.Dev)
-                Console.WriteLine($"Started encrypting");
-
+            PrintIfDevLevel("Started encrypting");
             var result = Process(loops, EncryptType.Encrypt);
-
-            if (_appLevel == AppLevel.Dev)
-                Console.WriteLine($"Encryption end");
-
+            PrintIfDevLevel("Encryption end");
             return result;
         }
 
         public BitMessage Decrypt(int loops)
         {
-            if (_appLevel == AppLevel.Dev)
-                Console.WriteLine($"Started decrypting");
-
+            PrintIfDevLevel("Started decrypting");
             var result = Process(loops, EncryptType.Decrypt);
-
-            if (_appLevel == AppLevel.Dev)
-                Console.WriteLine($"Decryption end");
-
+            PrintIfDevLevel("Decryption end");
             return result;
         }
 
@@ -69,11 +59,10 @@ namespace SzyfryBlokowe.Classes
             if (loops < 1)
                 throw new ArgumentException("Number of loops is to small.", nameof(loops));
 
-            if (_appLevel == AppLevel.Dev)
-            {
-                Console.WriteLine($"Input:\t(BIN){InputedMessage} - (HEX){_mapper.BitMessageToHexNumber(InputedMessage)}");
-                Console.WriteLine($"Key:\t(BIN){_keyGenerator.InputedKey} - (HEX){_mapper.BitMessageToHexNumber(_keyGenerator.InputedKey)}");
-            }
+            PrintIfDevLevel(
+                $"Input:\t(BIN){InputedMessage} - (HEX){_mapper.BitMessageToHexNumber(InputedMessage)}" +
+                $"\nKey:\t(BIN){_keyGenerator.InputedKey} - (HEX){_mapper.BitMessageToHexNumber(_keyGenerator.InputedKey)}"
+            );
 
             GetAllKeys(loops, type);
 
@@ -106,8 +95,7 @@ namespace SzyfryBlokowe.Classes
                 }
             );
 
-            if (_appLevel == AppLevel.Dev)
-                Console.WriteLine($"Function S result: {calculation}");
+            PrintIfDevLevel($"Function S result: {calculation}");
 
             return calculation;
         }
@@ -127,9 +115,7 @@ namespace SzyfryBlokowe.Classes
             if (type == EncryptType.Decrypt)
             {
                 list.Reverse();
-
-                if (_appLevel == AppLevel.Dev)
-                    Console.WriteLine("Key queue reversed");
+                PrintIfDevLevel("Key queue reversed");
             }
 
             return _allKeys = new Queue<BitMessage>(list);
@@ -140,6 +126,12 @@ namespace SzyfryBlokowe.Classes
             BitMessage temp = new(_leftMessage);
             _leftMessage = _rightMessage;
             _rightMessage = temp;
+        }
+
+        private void PrintIfDevLevel(string text)
+        {
+            if (_appLevel == AppLevel.Dev)
+                Console.WriteLine(text);
         }
     }
 }

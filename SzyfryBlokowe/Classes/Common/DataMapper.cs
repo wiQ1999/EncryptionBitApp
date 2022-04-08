@@ -24,7 +24,7 @@ namespace SzyfryBlokowe.Classes.Common
             new(text.SelectMany(c =>
             {
                 if (!_hexChars.Contains(c))
-                    throw new ArgumentException("Text must contain numbers between 0 and 1.");
+                    throw new ArgumentException("Text must contain characters between 0 and F.");
 
                 var converted = Convert.ToString(Convert.ToInt32(c.ToString(), 16), 2).PadLeft(4, '0');
                 return BitArrayToBitMessage(converted).ToArray();
