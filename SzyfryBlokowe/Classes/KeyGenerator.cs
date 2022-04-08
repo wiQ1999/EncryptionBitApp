@@ -6,7 +6,7 @@ namespace SzyfryBlokowe.Classes
     {
         private BitMessage _keyInput, _keyLoop;
         private uint _loop = 0;
-        private Func<BitMessage, BitMessage> _keyMarge = (a) 
+        private Func<BitMessage, BitMessage> _keyMargeFunction = (a) 
             => new(new bool[] { a[0], a[2], a[4], a[6] });
 
         public readonly BitMessage InputedKey;
@@ -31,16 +31,16 @@ namespace SzyfryBlokowe.Classes
             return GenerateKeyLoop();
         }
 
-        private void MergeRotation()
-            => _keyInput = _keyInput.RotateLeft(1);
-
         private void SplitRotation()
         {
             var dividedKey = _keyInput.DivideInHalf();
             _keyInput = new(dividedKey.Item1.RotateLeft(1), dividedKey.Item2.RotateLeft(1));
         }
 
+        private void MergeRotation()
+            => _keyInput = _keyInput.RotateLeft(1);
+
         private BitMessage GenerateKeyLoop()
-            => _keyLoop = _keyMarge(_keyInput);
+            => _keyLoop = _keyMargeFunction(_keyInput);
     }
 }
